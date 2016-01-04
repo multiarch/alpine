@@ -32,7 +32,7 @@ for version in "${versions[@]}"; do
 
 	# download apk.static
 	if [ ! -f $TMP/sbin/apk.static ]; then
-	    apkv=$(curl -sSL $REPO/$ARCH/APKINDEX.tar.gz | tar -Oxz |
+	    apkv=$(curl -sSL $REPO/$ARCH/APKINDEX.tar.gz | tar -Oxz | strings |
 		grep '^P:apk-tools-static$' -A1 | tail -n1 | cut -d: -f2)
 	    curl -sSL $REPO/$ARCH/apk-tools-static-${apkv}.apk | tar -xz -C $TMP sbin/apk.static
 	fi
