@@ -28,7 +28,7 @@ for version in "${versions[@]}"; do
 	TMP=tmp
 	ROOTFS=rootfs
 
-	mkdir -p $TMP $ROOTFS
+	mkdir -p $TMP $ROOTFS/usr/bin
 
 	# download apk.static
 	if [ ! -f $TMP/sbin/apk.static ]; then
@@ -38,6 +38,14 @@ for version in "${versions[@]}"; do
 	fi
 
 	# FIXME: register binfmt
+
+	# install qemu-user-static
+	if [ -n "${qemu_arch}" ]; then
+	    if [ ! -f x86_64_qemu-${qemu_arch}-static.tar.xz ]; then
+		wget -N https://github.com/multiarch/qemu-user-static/releases/download/v2.5.0/x86_64_qemu-${qemu_arch}-static.tar.xz
+	    fi
+	    tar -xvf x86_64_qemu-${qemu_arch}-static.tar.xz -C $ROOTFS/usr/bin/
+	fi
 
 	# create rootfs
 	$TMP/sbin/apk.static --repository $REPO --update-cache --allow-untrusted \
@@ -51,6 +59,9 @@ for version in "${versions[@]}"; do
 	    tar --numeric-owner -C $ROOTFS -c . | xz > rootfs.tar.xz
 	fi
 
+	# clean rootfs
+	rm -f $ROOTFS/usr/bin/qemu-*-static
+
 	# create Dockerfile
 	cat > Dockerfile <<EOF
 FROM scratch
@@ -61,9 +72,6 @@ EOF
 
 	# add qemu-user-static binary
 	if [ -n "${qemu_arch}" ]; then
-	    if [ ! -f x86_64_qemu-${qemu_arch}-static.tar.xz ]; then
-		wget -N https://github.com/multiarch/qemu-user-static/releases/download/v2.5.0/x86_64_qemu-${qemu_arch}-static.tar.xz
-	    fi
 	    cat >> Dockerfile <<EOF
 
 # Add qemu-user-static binary for amd64 builders
