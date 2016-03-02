@@ -23,7 +23,7 @@ for version in "${versions[@]}"; do
 	ARCH="$(cat arch)"
 	qemu_arch="$(cat qemu_arch || true)"
 
-	MIRROR=${MIRROR:-http://nl.alpinelinux.org/alpine}
+	MIRROR=${MIRROR:-http://dl-cdn.alpinelinux.org/alpine}
 	REPO=$MIRROR/$REL/main
 	TMP=tmp
 	ROOTFS=rootfs
