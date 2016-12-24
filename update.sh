@@ -41,10 +41,10 @@ for version in "${versions[@]}"; do
 
 	# install qemu-user-static
 	if [ -n "${qemu_arch}" ]; then
-	    if [ ! -f x86_64_qemu-${qemu_arch}-static.tar.xz ]; then
-		wget -N https://github.com/multiarch/qemu-user-static/releases/download/v2.5.0/x86_64_qemu-${qemu_arch}-static.tar.xz
+	    if [ ! -f x86_64_qemu-${qemu_arch}-static.tar.gz ]; then
+		wget -N https://github.com/multiarch/qemu-user-static/releases/download/v2.7.0/x86_64_qemu-${qemu_arch}-static.tar.gz
 	    fi
-	    tar -xvf x86_64_qemu-${qemu_arch}-static.tar.xz -C $ROOTFS/usr/bin/
+	    tar -xvf x86_64_qemu-${qemu_arch}-static.tar.gz -C $ROOTFS/usr/bin/
 	fi
 
 	# create rootfs
