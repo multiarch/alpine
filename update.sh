@@ -75,7 +75,7 @@ EOF
 	    cat >> Dockerfile <<EOF
 
 # Add qemu-user-static binary for amd64 builders
-ADD x86_64_qemu-${qemu_arch}-static.tar.xz /usr/bin
+ADD x86_64_qemu-${qemu_arch}-static.tar.gz /usr/bin
 EOF
 	fi
 
