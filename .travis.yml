@@ -1,0 +1,42 @@
+sudo: required
+services:
+- docker
+language: bash
+env:
+- VERSION=aarch64-edge
+- VERSION=aarch64-latest-stable
+- VERSION=aarch64-v3.5
+- VERSION=armhf-edge
+- VERSION=armhf-latest-stable
+- VERSION=armhf-v3.5
+- VERSION=armhf-v3.4
+- VERSION=armhf-v3.3
+- VERSION=armhf-v3.2
+- VERSION=armhf-v3.1
+- VERSION=x86-edge
+- VERSION=x86-latest-stable
+- VERSION=x86-v3.5
+- VERSION=x86-v3.4
+- VERSION=x86-v3.3
+- VERSION=x86-v3.2
+- VERSION=x86-v3.1
+- VERSION=x86-v3.0
+- VERSION=x86-v2.7
+- VERSION=x86_64-edge
+- VERSION=x86_64-latest-stable
+- VERSION=x86_64-v3.5
+- VERSION=x86_64-v3.4
+- VERSION=x86_64-v3.3
+- VERSION=x86_64-v3.2
+- VERSION=x86_64-v3.1
+- VERSION=x86_64-v3.0
+- VERSION=x86_64-v2.7
+matrix:
+  allow_failures:
+  - env: VERSION=armhf-latest-stable
+  - env: VERSION=armhf-v3.5
+install:
+- sudo apt-get -q update && sudo apt-get -y install qemu-user-static
+- docker run --rm --privileged multiarch/qemu-user-static:register
+script:
+- sudo ./update.sh $VERSION
