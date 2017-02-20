@@ -31,10 +31,6 @@ env:
 - VERSION=x86_64-v3.1
 - VERSION=x86_64-v3.0
 - VERSION=x86_64-v2.7
-matrix:
-  allow_failures:
-  - env: VERSION=armhf-latest-stable
-  - env: VERSION=armhf-v3.5
 install:
 - sudo apt-get -q update && sudo apt-get -y install qemu-user-static
 - docker run --rm --privileged multiarch/qemu-user-static:register
