@@ -1,38 +1,16 @@
 sudo: required
-services:
-- docker
+services: docker
 language: bash
 env:
-- VERSION=aarch64-edge
-- VERSION=aarch64-latest-stable
-- VERSION=aarch64-v3.5
-- VERSION=armhf-edge
-- VERSION=armhf-latest-stable
-- VERSION=armhf-v3.5
-- VERSION=armhf-v3.4
-- VERSION=armhf-v3.3
-- VERSION=armhf-v3.2
-- VERSION=armhf-v3.1
-- VERSION=x86-edge
-- VERSION=x86-latest-stable
-- VERSION=x86-v3.5
-- VERSION=x86-v3.4
-- VERSION=x86-v3.3
-- VERSION=x86-v3.2
-- VERSION=x86-v3.1
-- VERSION=x86-v3.0
-- VERSION=x86-v2.7
-- VERSION=x86_64-edge
-- VERSION=x86_64-latest-stable
-- VERSION=x86_64-v3.5
-- VERSION=x86_64-v3.4
-- VERSION=x86_64-v3.3
-- VERSION=x86_64-v3.2
-- VERSION=x86_64-v3.1
-- VERSION=x86_64-v3.0
-- VERSION=x86_64-v2.7
-install:
-- sudo apt-get -q update && sudo apt-get -y install qemu-user-static
-- docker run --rm --privileged multiarch/qemu-user-static:register
+    - ARCH=x86      VERSION=v3.4    QEMU_ARCH=i386
+    - ARCH=x86_64   VERSION=v3.4    QEMU_ARCH=x86_64
+    - ARCH=armhf    VERSION=v3.4    QEMU_ARCH=arm
+    - ARCH=x86      VERSION=v3.5    QEMU_ARCH=i386
+    - ARCH=x86_64   VERSION=v3.5    QEMU_ARCH=x86_64
+    - ARCH=armhf    VERSION=v3.5    QEMU_ARCH=arm
+before_script:
+    - sudo apt-get -y install qemu-user-static
 script:
-- sudo ./update.sh $VERSION
+    - sudo ./update.sh -a "$ARCH" -v "$VERSION" -q "$QEMU_ARCH" -d "lafin/alpine"
+after_success:
+    - if [[ $TRAVIS_PULL_REQUEST == 'false' ]]; then docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && docker push lafin/alpine; fi
