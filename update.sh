@@ -1,88 +1,82 @@
 #!/bin/bash
 set -e
 
-cd "$(dirname "$BASH_SOURCE")"
+# A POSIX variable
+OPTIND=1 # Reset in case getopts has been used previously in the shell.
 
-versions=( "$@" )
-if [ ${#versions[@]} -eq 0 ]; then
-	versions=( */ )
+while getopts "a:q:v:d:" opt; do
+    case "$opt" in
+	a)  ARCH=$OPTARG
+        ;;
+	q)  QEMU_ARCH=$OPTARG
+        ;;
+    v)  VERSION=$OPTARG
+        ;;
+    d)  DOCKER_REPO=$OPTARG
+        ;;
+    esac
+done
+
+shift $((OPTIND-1))
+
+[ "$1" = "--" ] && shift
+
+MIRROR=${MIRROR:-http://dl-cdn.alpinelinux.org/alpine}
+REPO=$MIRROR/$VERSION/main
+TMP=tmp
+ROOTFS=rootfs
+
+mkdir -p $TMP $ROOTFS/usr/bin
+
+# download apk.static
+if [ ! -f $TMP/sbin/apk.static ]; then
+	apkv=$(curl -sSL $REPO/$ARCH/APKINDEX.tar.gz | tar -Oxz | strings |
+	grep '^P:apk-tools-static$' -A1 | tail -n1 | cut -d: -f2)
+	curl -sSL $REPO/$ARCH/apk-tools-static-${apkv}.apk | tar -xz -C $TMP sbin/apk.static
 fi
-versions=( "${versions[@]%/}" )
 
-repo="$(cat repo 2>/dev/null || true)"
-if [ -z "$repo" ]; then
-    user="$(docker info | awk -F ': ' '$1 == "Username" { print $2; exit }')"
-    repo="${user:+$user/}ubuntu-core"
+# FIXME: register binfmt
+
+# install qemu-user-static
+if [ -n "${QEMU_ARCH}" ]; then
+	if [ ! -f x86_64_qemu-${QEMU_ARCH}-static.tar.gz ]; then
+		wget -N https://github.com/multiarch/qemu-user-static/releases/download/v2.7.0/x86_64_qemu-${QEMU_ARCH}-static.tar.gz
+	fi
+	tar -xvf x86_64_qemu-${QEMU_ARCH}-static.tar.gz -C $ROOTFS/usr/bin/
 fi
 
-for version in "${versions[@]}"; do
-    (
-	cd "$version"
+# create rootfs
+$TMP/sbin/apk.static --repository $REPO --update-cache --allow-untrusted \
+	--root $ROOTFS --initdb add alpine-base --verbose
 
-	REL="$(cat version)"
-	ARCH="$(cat arch)"
-	qemu_arch="$(cat qemu_arch || true)"
+# alter rootfs
+printf '%s\n' $REPO > $ROOTFS/etc/apk/repositories
 
-	MIRROR=${MIRROR:-http://dl-cdn.alpinelinux.org/alpine}
-	REPO=$MIRROR/$REL/main
-	TMP=tmp
-	ROOTFS=rootfs
+# create tarball of rootfs
+if [ ! -f rootfs.tar.xz ]; then
+	tar --numeric-owner -C $ROOTFS -c . | xz > rootfs.tar.xz
+fi
 
-	mkdir -p $TMP $ROOTFS/usr/bin
+# clean rootfs
+rm -f $ROOTFS/usr/bin/qemu-*-static
 
-	# download apk.static
-	if [ ! -f $TMP/sbin/apk.static ]; then
-	    apkv=$(curl -sSL $REPO/$ARCH/APKINDEX.tar.gz | tar -Oxz | strings |
-		grep '^P:apk-tools-static$' -A1 | tail -n1 | cut -d: -f2)
-	    curl -sSL $REPO/$ARCH/apk-tools-static-${apkv}.apk | tar -xz -C $TMP sbin/apk.static
-	fi
-
-	# FIXME: register binfmt
-
-	# install qemu-user-static
-	if [ -n "${qemu_arch}" ]; then
-	    if [ ! -f x86_64_qemu-${qemu_arch}-static.tar.gz ]; then
-		wget -N https://github.com/multiarch/qemu-user-static/releases/download/v2.7.0/x86_64_qemu-${qemu_arch}-static.tar.gz
-	    fi
-	    tar -xvf x86_64_qemu-${qemu_arch}-static.tar.gz -C $ROOTFS/usr/bin/
-	fi
-
-	# create rootfs
-	$TMP/sbin/apk.static --repository $REPO --update-cache --allow-untrusted \
-	    --root $ROOTFS --initdb add alpine-base --verbose
-
-	# alter rootfs
-	printf '%s\n' $REPO > $ROOTFS/etc/apk/repositories
-
-	# create tarball of rootfs
-	if [ ! -f rootfs.tar.xz ]; then
-	    tar --numeric-owner -C $ROOTFS -c . | xz > rootfs.tar.xz
-	fi
-
-	# clean rootfs
-	rm -f $ROOTFS/usr/bin/qemu-*-static
-
-	# create Dockerfile
-	cat > Dockerfile <<EOF
+# create Dockerfile
+cat > Dockerfile <<EOF
 FROM scratch
 ADD rootfs.tar.xz /
 
-ENV ARCH=${ARCH} ALPINE_REL=${REL} DOCKER_REPO=${repo} ALPINE_MIRROR=${MIRROR}
+ENV ARCH=${ARCH} ALPINE_REL=${VERSION} DOCKER_REPO=${DOCKER_REPO} ALPINE_MIRROR=${MIRROR}
 EOF
 
-	# add qemu-user-static binary
-	if [ -n "${qemu_arch}" ]; then
-	    cat >> Dockerfile <<EOF
+# add qemu-user-static binary
+if [ -n "${QEMU_ARCH}" ]; then
+	cat >> Dockerfile <<EOF
 
 # Add qemu-user-static binary for amd64 builders
-ADD x86_64_qemu-${qemu_arch}-static.tar.gz /usr/bin
+ADD x86_64_qemu-${QEMU_ARCH}-static.tar.gz /usr/bin
 EOF
-	fi
+fi
 
-	# build
-	docker build -t "${repo}:${ARCH}-${REL}" .
-	docker run --rm "${repo}:${ARCH}-${REL}" /bin/sh -ec "echo Hello from Alpine !; set -x; uname -a; cat /etc/alpine-release"
-
-	# FIXME: tag latest
-    )
-done
+# build
+docker build -t "${DOCKER_REPO}:${ARCH}-${VERSION}" .
+docker run --rm "${DOCKER_REPO}:${ARCH}-${VERSION}" /bin/sh -ec "echo Hello from Alpine !; set -x; uname -a; cat /etc/alpine-release"
