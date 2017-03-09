@@ -1,16 +1,17 @@
-#!/bin/bash
-set -e
+#!/bin/bash -e
 
 # A POSIX variable
 OPTIND=1 # Reset in case getopts has been used previously in the shell.
 
-while getopts "a:q:v:d:" opt; do
+while getopts "a:v:q:u:d:" opt; do
     case "$opt" in
-	a)  ARCH=$OPTARG
-        ;;
-	q)  QEMU_ARCH=$OPTARG
+    a)  ARCH=$OPTARG
         ;;
     v)  VERSION=$OPTARG
+        ;;
+    q)  QEMU_ARCH=$OPTARG
+        ;;
+    u)  QEMU_VER=$OPTARG
         ;;
     d)  DOCKER_REPO=$OPTARG
         ;;
@@ -30,31 +31,31 @@ mkdir -p $TMP $ROOTFS/usr/bin
 
 # download apk.static
 if [ ! -f $TMP/sbin/apk.static ]; then
-	apkv=$(curl -sSL $REPO/$ARCH/APKINDEX.tar.gz | tar -Oxz | strings |
-	grep '^P:apk-tools-static$' -A1 | tail -n1 | cut -d: -f2)
-	curl -sSL $REPO/$ARCH/apk-tools-static-${apkv}.apk | tar -xz -C $TMP sbin/apk.static
+    apkv=$(curl -sSL $REPO/$ARCH/APKINDEX.tar.gz | tar -Oxz | strings |
+    grep '^P:apk-tools-static$' -A1 | tail -n1 | cut -d: -f2)
+    curl -sSL $REPO/$ARCH/apk-tools-static-${apkv}.apk | tar -xz -C $TMP sbin/apk.static
 fi
 
 # FIXME: register binfmt
 
 # install qemu-user-static
 if [ -n "${QEMU_ARCH}" ]; then
-	if [ ! -f x86_64_qemu-${QEMU_ARCH}-static.tar.gz ]; then
-		wget -N https://github.com/multiarch/qemu-user-static/releases/download/v2.7.0/x86_64_qemu-${QEMU_ARCH}-static.tar.gz
-	fi
-	tar -xvf x86_64_qemu-${QEMU_ARCH}-static.tar.gz -C $ROOTFS/usr/bin/
+    if [ ! -f x86_64_qemu-${QEMU_ARCH}-static.tar.gz ]; then
+        wget -N https://github.com/multiarch/qemu-user-static/releases/download/${QEMU_VER}/x86_64_qemu-${QEMU_ARCH}-static.tar.gz
+    fi
+    tar -xvf x86_64_qemu-${QEMU_ARCH}-static.tar.gz -C $ROOTFS/usr/bin/
 fi
 
 # create rootfs
 $TMP/sbin/apk.static --repository $REPO --update-cache --allow-untrusted \
-	--root $ROOTFS --initdb add alpine-base --verbose
+    --root $ROOTFS --initdb add alpine-base --verbose
 
 # alter rootfs
 printf '%s\n' $REPO > $ROOTFS/etc/apk/repositories
 
 # create tarball of rootfs
 if [ ! -f rootfs.tar.xz ]; then
-	tar --numeric-owner -C $ROOTFS -c . | xz > rootfs.tar.xz
+    tar --numeric-owner -C $ROOTFS -c . | xz > rootfs.tar.xz
 fi
 
 # clean rootfs
@@ -70,7 +71,7 @@ EOF
 
 # add qemu-user-static binary
 if [ -n "${QEMU_ARCH}" ]; then
-	cat >> Dockerfile <<EOF
+    cat >> Dockerfile <<EOF
 
 # Add qemu-user-static binary for amd64 builders
 ADD x86_64_qemu-${QEMU_ARCH}-static.tar.gz /usr/bin
