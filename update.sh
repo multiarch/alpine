@@ -23,7 +23,8 @@ shift $((OPTIND-1))
 [ "$1" = "--" ] && shift
 
 MIRROR=${MIRROR:-http://dl-cdn.alpinelinux.org/alpine}
-REPO="$MIRROR/$VERSION/main\n$MIRROR/$VERSION/community"
+REPO=$MIRROR/$VERSION/main
+COMMUNITYREPO=$MIRROR/$VERSION/community
 TMP=tmp
 ROOTFS=rootfs
 
@@ -52,6 +53,7 @@ $TMP/sbin/apk.static --repository $REPO --update-cache --allow-untrusted \
 
 # alter rootfs
 printf '%s\n' $REPO > $ROOTFS/etc/apk/repositories
+printf '%s\n' $COMMUNITYREPO >> $ROOTFS/etc/apk/repositories
 
 # create tarball of rootfs
 if [ ! -f rootfs.tar.xz ]; then
