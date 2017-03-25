@@ -23,7 +23,7 @@ shift $((OPTIND-1))
 [ "$1" = "--" ] && shift
 
 MIRROR=${MIRROR:-http://dl-cdn.alpinelinux.org/alpine}
-REPO=$MIRROR/$VERSION/main
+REPO="$MIRROR/$VERSION/main\n$MIRROR/$VERSION/community"
 TMP=tmp
 ROOTFS=rootfs
 
