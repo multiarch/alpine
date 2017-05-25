@@ -14,6 +14,11 @@ env:
         - ARCH=x86_64   VERSION=v3.5    QEMU_ARCH=x86_64
         - ARCH=armhf    VERSION=v3.5    QEMU_ARCH=arm
         - ARCH=aarch64  VERSION=v3.5    QEMU_ARCH=aarch64
+        
+        - ARCH=x86      VERSION=v3.6    QEMU_ARCH=i386
+        - ARCH=x86_64   VERSION=v3.6    QEMU_ARCH=x86_64
+        - ARCH=armhf    VERSION=v3.6    QEMU_ARCH=arm
+        - ARCH=aarch64  VERSION=v3.6    QEMU_ARCH=aarch64
 
         - ARCH=x86      VERSION=latest-stable    QEMU_ARCH=i386
         - ARCH=x86_64   VERSION=latest-stable    QEMU_ARCH=x86_64
