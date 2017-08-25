@@ -6,32 +6,49 @@ env:
         - QEMU_VER=v2.9.1
         - DOCKER_REPO=multiarch/alpine
     matrix:
-        - ARCH=x86      VERSION=v3.4    QEMU_ARCH=i386
-        - ARCH=x86_64   VERSION=v3.4    QEMU_ARCH=x86_64
-        - ARCH=armhf    VERSION=v3.4    QEMU_ARCH=arm
+        - ARCH=x86      VERSION=v3.4    QEMU_ARCH=i386      TAG_ARCH=x86
+        - ARCH=x86_64   VERSION=v3.4    QEMU_ARCH=x86_64    TAG_ARCH=x86_64
+        - ARCH=x86      VERSION=v3.4    QEMU_ARCH=i386      TAG_ARCH=i386
+        - ARCH=x86_64   VERSION=v3.4    QEMU_ARCH=x86_64    TAG_ARCH=amd64
+        - ARCH=armhf    VERSION=v3.4    QEMU_ARCH=arm       TAG_ARCH=armhf
+        - ARCH=aarch64  VERSION=v3.4    QEMU_ARCH=aarch64   TAG_ARCH=aarch64
+        - ARCH=aarch64  VERSION=v3.4    QEMU_ARCH=aarch64   TAG_ARCH=arm64
 
-        - ARCH=x86      VERSION=v3.5    QEMU_ARCH=i386
-        - ARCH=x86_64   VERSION=v3.5    QEMU_ARCH=x86_64
-        - ARCH=armhf    VERSION=v3.5    QEMU_ARCH=arm
-        - ARCH=aarch64  VERSION=v3.5    QEMU_ARCH=aarch64
+        - ARCH=x86      VERSION=v3.5    QEMU_ARCH=i386      TAG_ARCH=x86
+        - ARCH=x86_64   VERSION=v3.5    QEMU_ARCH=x86_64    TAG_ARCH=x86_64
+        - ARCH=x86      VERSION=v3.5    QEMU_ARCH=i386      TAG_ARCH=i386
+        - ARCH=x86_64   VERSION=v3.5    QEMU_ARCH=x86_64    TAG_ARCH=i386
+        - ARCH=armhf    VERSION=v3.5    QEMU_ARCH=arm       TAG_ARCH=armhf
+        - ARCH=aarch64  VERSION=v3.5    QEMU_ARCH=aarch64   TAG_ARCH=aarch64
+        - ARCH=aarch64  VERSION=v3.5    QEMU_ARCH=aarch64   TAG_ARCH=arm64
         
-        - ARCH=x86      VERSION=v3.6    QEMU_ARCH=i386
-        - ARCH=x86_64   VERSION=v3.6    QEMU_ARCH=x86_64
-        - ARCH=armhf    VERSION=v3.6    QEMU_ARCH=arm
-        - ARCH=aarch64  VERSION=v3.6    QEMU_ARCH=aarch64
+        - ARCH=x86      VERSION=v3.6    QEMU_ARCH=i386      TAG_ARCH=x86
+        - ARCH=x86_64   VERSION=v3.6    QEMU_ARCH=x86_64    TAG_ARCH=x86_64
+        - ARCH=x86      VERSION=v3.6    QEMU_ARCH=i386      TAG_ARCH=i386
+        - ARCH=x86_64   VERSION=v3.6    QEMU_ARCH=x86_64    TAG_ARCH=amd64
+        - ARCH=armhf    VERSION=v3.6    QEMU_ARCH=arm       TAG_ARCH=armhf
+        - ARCH=aarch64  VERSION=v3.6    QEMU_ARCH=aarch64   TAG_ARCH=aarch64
+        - ARCH=aarch64  VERSION=v3.6    QEMU_ARCH=aarch64   TAG_ARCH=arm64
 
-        - ARCH=x86      VERSION=latest-stable    QEMU_ARCH=i386
-        - ARCH=x86_64   VERSION=latest-stable    QEMU_ARCH=x86_64
-        - ARCH=armhf    VERSION=latest-stable    QEMU_ARCH=arm
-        - ARCH=aarch64  VERSION=latest-stable    QEMU_ARCH=aarch64
+        - ARCH=x86      VERSION=latest-stable    QEMU_ARCH=i386     TAG_ARCH=x86
+        - ARCH=x86_64   VERSION=latest-stable    QEMU_ARCH=x86_64   TAG_ARCH=x86_64
+        - ARCH=x86      VERSION=latest-stable    QEMU_ARCH=i386     TAG_ARCH=i386
+        - ARCH=x86_64   VERSION=latest-stable    QEMU_ARCH=x86_64   TAG_ARCH=amd64
+        - ARCH=armhf    VERSION=latest-stable    QEMU_ARCH=arm      TAG_ARCH=armhf
+        - ARCH=aarch64  VERSION=latest-stable    QEMU_ARCH=aarch64  TAG_ARCH=aarch64
+        - ARCH=aarch64  VERSION=latest-stable    QEMU_ARCH=aarch64  TAG_ARCH=arm64
 
-        - ARCH=x86      VERSION=edge    QEMU_ARCH=i386
-        - ARCH=x86_64   VERSION=edge    QEMU_ARCH=x86_64
-        - ARCH=armhf    VERSION=edge    QEMU_ARCH=arm
-        - ARCH=aarch64  VERSION=edge    QEMU_ARCH=aarch64
+        - ARCH=x86      VERSION=edge    QEMU_ARCH=i386      TAG_ARCH=x86
+        - ARCH=x86_64   VERSION=edge    QEMU_ARCH=x86_64    TAG_ARCH=x86_64
+        - ARCH=x86      VERSION=edge    QEMU_ARCH=i386      TAG_ARCH=i386
+        - ARCH=x86_64   VERSION=edge    QEMU_ARCH=x86_64    TAG_ARCH=amd64
+        - ARCH=armhf    VERSION=edge    QEMU_ARCH=arm       TAG_ARCH=armhf
+        - ARCH=aarch64  VERSION=edge    QEMU_ARCH=aarch64   TAG_ARCH=aarch64
+        - ARCH=aarch64  VERSION=edge    QEMU_ARCH=aarch64   TAG_ARCH=arm64
+
 before_script:
     - sudo apt-get -y install qemu-user-static
 script:
-    - sudo ./update.sh -a "$ARCH" -v "$VERSION" -q "$QEMU_ARCH" -u "$QEMU_VER" -d "$DOCKER_REPO"
+    - sudo ./update.sh -a "$ARCH" -v "$VERSION" -q "$QEMU_ARCH" -u "$QEMU_VER" -d "$DOCKER_REPO" -t "$TAG_ARCH"
 after_success:
     - if [[ $TRAVIS_PULL_REQUEST == 'false' ]]; then docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && docker push $DOCKER_REPO; fi

@@ -15,6 +15,8 @@ while getopts "a:v:q:u:d:" opt; do
         ;;
     d)  DOCKER_REPO=$OPTARG
         ;;
+    t)  TAG_ARCH=$OPTARG
+        ;;
     esac
 done
 
@@ -81,5 +83,5 @@ EOF
 fi
 
 # build
-docker build -t "${DOCKER_REPO}:${ARCH}-${VERSION}" .
-docker run --rm "${DOCKER_REPO}:${ARCH}-${VERSION}" /bin/sh -ec "echo Hello from Alpine !; set -x; uname -a; cat /etc/alpine-release"
+docker build -t "${DOCKER_REPO}:${TAG_ARCH}-${VERSION}" .
+docker run --rm "${DOCKER_REPO}:${TAG_ARCH}-${VERSION}" /bin/sh -ec "echo Hello from Alpine !; set -x; uname -a; cat /etc/alpine-release"
