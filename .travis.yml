@@ -6,12 +6,6 @@ env:
         - QEMU_VER=v2.12.0
         - DOCKER_REPO=multiarch/alpine
     matrix:
-        - ARCH=x86      VERSION=v3.4    QEMU_ARCH=i386      TAG_ARCH=x86
-        - ARCH=x86_64   VERSION=v3.4    QEMU_ARCH=x86_64    TAG_ARCH=x86_64
-        - ARCH=x86      VERSION=v3.4    QEMU_ARCH=i386      TAG_ARCH=i386
-        - ARCH=x86_64   VERSION=v3.4    QEMU_ARCH=x86_64    TAG_ARCH=amd64
-        - ARCH=armhf    VERSION=v3.4    QEMU_ARCH=arm       TAG_ARCH=armhf
-
         - ARCH=x86      VERSION=v3.5    QEMU_ARCH=i386      TAG_ARCH=x86
         - ARCH=x86_64   VERSION=v3.5    QEMU_ARCH=x86_64    TAG_ARCH=x86_64
         - ARCH=x86      VERSION=v3.5    QEMU_ARCH=i386      TAG_ARCH=i386
