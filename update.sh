@@ -3,7 +3,7 @@
 # A POSIX variable
 OPTIND=1 # Reset in case getopts has been used previously in the shell.
 
-while getopts "a:v:q:u:d:" opt; do
+while getopts "a:v:q:u:d:t:l:" opt; do
     case "$opt" in
     a)  ARCH=$OPTARG
         ;;
