@@ -3,7 +3,7 @@ services: docker
 language: bash
 env:
     global:
-        - QEMU_VER=v2.12.0
+        - QEMU_VER=v2.12.0-1
         - DOCKER_REPO=multiarch/alpine
         - LATEST_VERSION=v3.8
     matrix:
