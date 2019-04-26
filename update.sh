@@ -87,6 +87,6 @@ fi
 # build
 docker build -t "${DOCKER_REPO}:${TAG_ARCH}-${VERSION}" .
 if [ "$VERSION" == "$LATEST_VERSION" ]; then
-    docker tag ${DOCKER_REPO}:${TAG_ARCH}-${VERSION} ${DOCKER_REPO}:${TAG_ARCH}-${LATEST_VERSION}
+    docker tag ${DOCKER_REPO}:${TAG_ARCH}-${VERSION} ${DOCKER_REPO}:${TAG_ARCH}-latest-stable
 fi
 docker run --rm "${DOCKER_REPO}:${TAG_ARCH}-${VERSION}" /bin/sh -ec "echo Hello from Alpine !; set -x; uname -a; cat /etc/alpine-release"

@@ -1,20 +1,19 @@
+dist: xenial
 sudo: required
 services: docker
 language: bash
+addons:
+  apt:
+    sources:
+        - sourceline: 'deb http://archive.ubuntu.com/ubuntu bionic main universe'
+    packages:
+      - qemu-user-static
 env:
     global:
-        - QEMU_VER=v2.12.0-1
+        - QEMU_VER=v4.0.0
         - DOCKER_REPO=multiarch/alpine
-        - LATEST_VERSION=v3.8
+        - LATEST_VERSION=v3.9
     matrix:
-        - ARCH=x86      VERSION=v3.5    QEMU_ARCH=i386      TAG_ARCH=x86
-        - ARCH=x86_64   VERSION=v3.5    QEMU_ARCH=x86_64    TAG_ARCH=x86_64
-        - ARCH=x86      VERSION=v3.5    QEMU_ARCH=i386      TAG_ARCH=i386
-        - ARCH=x86_64   VERSION=v3.5    QEMU_ARCH=x86_64    TAG_ARCH=i386
-        - ARCH=armhf    VERSION=v3.5    QEMU_ARCH=arm       TAG_ARCH=armhf
-        - ARCH=aarch64  VERSION=v3.5    QEMU_ARCH=aarch64   TAG_ARCH=aarch64
-        - ARCH=aarch64  VERSION=v3.5    QEMU_ARCH=aarch64   TAG_ARCH=arm64
-
         - ARCH=x86      VERSION=v3.6    QEMU_ARCH=i386      TAG_ARCH=x86
         - ARCH=x86_64   VERSION=v3.6    QEMU_ARCH=x86_64    TAG_ARCH=x86_64
         - ARCH=x86      VERSION=v3.6    QEMU_ARCH=i386      TAG_ARCH=i386
@@ -54,9 +53,6 @@ env:
         - ARCH=armhf    VERSION=edge    QEMU_ARCH=arm       TAG_ARCH=armhf
         - ARCH=aarch64  VERSION=edge    QEMU_ARCH=aarch64   TAG_ARCH=aarch64
         - ARCH=aarch64  VERSION=edge    QEMU_ARCH=aarch64   TAG_ARCH=arm64
-
-before_script:
-    - sudo apt-get -y install qemu-user-static
 script:
     - sudo ./update.sh -a "$ARCH" -v "$VERSION" -q "$QEMU_ARCH" -u "$QEMU_VER" -d "$DOCKER_REPO" -t "$TAG_ARCH" -l "$LATEST_VERSION"
 after_success:
