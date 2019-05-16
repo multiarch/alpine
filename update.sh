@@ -26,7 +26,7 @@ shift $((OPTIND-1))
 
 [ "$1" = "--" ] && shift
 
-MIRROR=${MIRROR:-http://dl-cdn.alpinelinux.org/alpine}
+MIRROR=${MIRROR:-https://dl-cdn.alpinelinux.org/alpine}
 REPO=$MIRROR/$VERSION/main
 COMMUNITYREPO=$MIRROR/$VERSION/community
 TMP=tmp
@@ -36,9 +36,9 @@ mkdir -p $TMP $ROOTFS/usr/bin
 
 # download apk.static
 if [ ! -f $TMP/sbin/apk.static ]; then
-    apkv=$(curl -sSL $REPO/$ARCH/APKINDEX.tar.gz | tar -Oxz | strings |
+    apkv=$(curl -sSLk $REPO/$ARCH/APKINDEX.tar.gz | tar -Oxz | strings |
     grep '^P:apk-tools-static$' -A1 | tail -n1 | cut -d: -f2)
-    curl -sSL $REPO/$ARCH/apk-tools-static-${apkv}.apk | tar -xz -C $TMP sbin/apk.static
+    curl -sSLk $REPO/$ARCH/apk-tools-static-${apkv}.apk | tar -xz -C $TMP sbin/apk.static
 fi
 
 # FIXME: register binfmt
