@@ -80,7 +80,7 @@ if [ -n "${QEMU_ARCH}" ]; then
     cat >> Dockerfile <<EOF
 
 # Add qemu-user-static binary for amd64 builders
-ADD x86_64_qemu-${QEMU_ARCH}-static.tar.gz /usr/bin
+ADD x86_64_qemu-${QEMU_ARCH}-static.tar.gz /usr/bin/
 EOF
 fi
 
