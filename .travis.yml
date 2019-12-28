@@ -20,6 +20,7 @@ env:
         - ARCH=armhf    VERSION=v3.8    QEMU_ARCH=arm       TAG_ARCH=armhf
         - ARCH=aarch64  VERSION=v3.8    QEMU_ARCH=aarch64   TAG_ARCH=aarch64
         - ARCH=aarch64  VERSION=v3.8    QEMU_ARCH=aarch64   TAG_ARCH=arm64
+        - ARCH=ppc64le  VERSION=v3.8    QEMU_ARCH=ppc64le   TAG_ARCH=ppc64le
 
         - ARCH=x86      VERSION=v3.9    QEMU_ARCH=i386      TAG_ARCH=x86
         - ARCH=x86_64   VERSION=v3.9    QEMU_ARCH=x86_64    TAG_ARCH=x86_64
@@ -28,6 +29,8 @@ env:
         - ARCH=armhf    VERSION=v3.9    QEMU_ARCH=arm       TAG_ARCH=armhf
         - ARCH=aarch64  VERSION=v3.9    QEMU_ARCH=aarch64   TAG_ARCH=aarch64
         - ARCH=aarch64  VERSION=v3.9    QEMU_ARCH=aarch64   TAG_ARCH=arm64
+        - ARCH=armv7    VERSION=v3.9    QEMU_ARCH=arm       TAG_ARCH=armv7
+        - ARCH=ppc64le  VERSION=v3.9    QEMU_ARCH=ppc64le   TAG_ARCH=ppc64le
 
         - ARCH=x86      VERSION=v3.10   QEMU_ARCH=i386      TAG_ARCH=x86
         - ARCH=x86_64   VERSION=v3.10   QEMU_ARCH=x86_64    TAG_ARCH=x86_64
@@ -36,6 +39,8 @@ env:
         - ARCH=armhf    VERSION=v3.10   QEMU_ARCH=arm       TAG_ARCH=armhf
         - ARCH=aarch64  VERSION=v3.10   QEMU_ARCH=aarch64   TAG_ARCH=aarch64
         - ARCH=aarch64  VERSION=v3.10   QEMU_ARCH=aarch64   TAG_ARCH=arm64
+        - ARCH=armv7    VERSION=v3.10   QEMU_ARCH=arm       TAG_ARCH=armv7
+        - ARCH=ppc64le  VERSION=v3.10   QEMU_ARCH=ppc64le   TAG_ARCH=ppc64le
 
         - ARCH=x86      VERSION=v3.11   QEMU_ARCH=i386      TAG_ARCH=x86
         - ARCH=x86_64   VERSION=v3.11   QEMU_ARCH=x86_64    TAG_ARCH=x86_64
@@ -44,6 +49,8 @@ env:
         - ARCH=armhf    VERSION=v3.11   QEMU_ARCH=arm       TAG_ARCH=armhf
         - ARCH=aarch64  VERSION=v3.11   QEMU_ARCH=aarch64   TAG_ARCH=aarch64
         - ARCH=aarch64  VERSION=v3.11   QEMU_ARCH=aarch64   TAG_ARCH=arm64
+        - ARCH=armv7    VERSION=v3.11   QEMU_ARCH=arm       TAG_ARCH=armv7
+        - ARCH=ppc64le  VERSION=v3.11   QEMU_ARCH=ppc64le   TAG_ARCH=ppc64le
 
         - ARCH=x86      VERSION=edge    QEMU_ARCH=i386      TAG_ARCH=x86
         - ARCH=x86_64   VERSION=edge    QEMU_ARCH=x86_64    TAG_ARCH=x86_64
@@ -52,6 +59,8 @@ env:
         - ARCH=armhf    VERSION=edge    QEMU_ARCH=arm       TAG_ARCH=armhf
         - ARCH=aarch64  VERSION=edge    QEMU_ARCH=aarch64   TAG_ARCH=aarch64
         - ARCH=aarch64  VERSION=edge    QEMU_ARCH=aarch64   TAG_ARCH=arm64
+        - ARCH=armv7    VERSION=edge    QEMU_ARCH=arm       TAG_ARCH=armv7
+        - ARCH=ppc64le  VERSION=edge    QEMU_ARCH=ppc64le   TAG_ARCH=ppc64le
 script:
     - sudo ./update.sh -a "$ARCH" -v "$VERSION" -q "$QEMU_ARCH" -u "$QEMU_VER" -d "$DOCKER_REPO" -t "$TAG_ARCH" -l "$LATEST_VERSION"
 after_success:
