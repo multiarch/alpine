@@ -9,7 +9,7 @@ addons:
       - qemu-user-static
 env:
     global:
-        - QEMU_VER=v4.2.0-2
+        - QEMU_VER=v4.2.0-4
         - DOCKER_REPO=multiarch/alpine
         - LATEST_VERSION=v3.11
     matrix:
