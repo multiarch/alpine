@@ -9,19 +9,10 @@ addons:
       - qemu-user-static
 env:
     global:
-        - QEMU_VER=v4.2.0-6
+        - QEMU_VER=v4.2.0-7
         - DOCKER_REPO=multiarch/alpine
         - LATEST_VERSION=v3.11
     matrix:
-        - ARCH=x86      VERSION=v3.8    QEMU_ARCH=i386      TAG_ARCH=x86
-        - ARCH=x86_64   VERSION=v3.8    QEMU_ARCH=x86_64    TAG_ARCH=x86_64
-        - ARCH=x86      VERSION=v3.8    QEMU_ARCH=i386      TAG_ARCH=i386
-        - ARCH=x86_64   VERSION=v3.8    QEMU_ARCH=x86_64    TAG_ARCH=amd64
-        - ARCH=armhf    VERSION=v3.8    QEMU_ARCH=arm       TAG_ARCH=armhf
-        - ARCH=aarch64  VERSION=v3.8    QEMU_ARCH=aarch64   TAG_ARCH=aarch64
-        - ARCH=aarch64  VERSION=v3.8    QEMU_ARCH=aarch64   TAG_ARCH=arm64
-        - ARCH=ppc64le  VERSION=v3.8    QEMU_ARCH=ppc64le   TAG_ARCH=ppc64le
-
         - ARCH=x86      VERSION=v3.9    QEMU_ARCH=i386      TAG_ARCH=x86
         - ARCH=x86_64   VERSION=v3.9    QEMU_ARCH=x86_64    TAG_ARCH=x86_64
         - ARCH=x86      VERSION=v3.9    QEMU_ARCH=i386      TAG_ARCH=i386
