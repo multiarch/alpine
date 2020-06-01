@@ -26,7 +26,7 @@ shift $((OPTIND-1))
 
 [ "$1" = "--" ] && shift
 
-MIRROR=${MIRROR:-https://uk.alpinelinux.org/alpine}
+MIRROR=${MIRROR:-https://dl-4.alpinelinux.org/alpine}
 REPO=$MIRROR/$VERSION/main
 COMMUNITYREPO=$MIRROR/$VERSION/community
 TMP=tmp

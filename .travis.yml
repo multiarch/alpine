@@ -9,9 +9,9 @@ addons:
       - qemu-user-static
 env:
     global:
-        - QEMU_VER=v4.2.0-7
+        - QEMU_VER=v5.0.0-2
         - DOCKER_REPO=multiarch/alpine
-        - LATEST_VERSION=v3.11
+        - LATEST_VERSION=v3.12
     matrix:
         - ARCH=x86      VERSION=v3.9    QEMU_ARCH=i386      TAG_ARCH=x86
         - ARCH=x86_64   VERSION=v3.9    QEMU_ARCH=x86_64    TAG_ARCH=x86_64
@@ -37,11 +37,21 @@ env:
         - ARCH=x86_64   VERSION=v3.11   QEMU_ARCH=x86_64    TAG_ARCH=x86_64
         - ARCH=x86      VERSION=v3.11   QEMU_ARCH=i386      TAG_ARCH=i386
         - ARCH=x86_64   VERSION=v3.11   QEMU_ARCH=x86_64    TAG_ARCH=amd64
-        - ARCH=armhf    VERSION=v3.11   QEMU_ARCH=arm       TAG_ARCH=armhf
+        # - ARCH=armhf    VERSION=v3.11   QEMU_ARCH=arm       TAG_ARCH=armhf
         - ARCH=aarch64  VERSION=v3.11   QEMU_ARCH=aarch64   TAG_ARCH=aarch64
         - ARCH=aarch64  VERSION=v3.11   QEMU_ARCH=aarch64   TAG_ARCH=arm64
-        - ARCH=armv7    VERSION=v3.11   QEMU_ARCH=arm       TAG_ARCH=armv7
+        # - ARCH=armv7    VERSION=v3.11   QEMU_ARCH=arm       TAG_ARCH=armv7
         - ARCH=ppc64le  VERSION=v3.11   QEMU_ARCH=ppc64le   TAG_ARCH=ppc64le
+
+        - ARCH=x86      VERSION=v3.12   QEMU_ARCH=i386      TAG_ARCH=x86
+        - ARCH=x86_64   VERSION=v3.12   QEMU_ARCH=x86_64    TAG_ARCH=x86_64
+        - ARCH=x86      VERSION=v3.12   QEMU_ARCH=i386      TAG_ARCH=i386
+        - ARCH=x86_64   VERSION=v3.12   QEMU_ARCH=x86_64    TAG_ARCH=amd64
+        - ARCH=armhf    VERSION=v3.12   QEMU_ARCH=arm       TAG_ARCH=armhf
+        - ARCH=aarch64  VERSION=v3.12   QEMU_ARCH=aarch64   TAG_ARCH=aarch64
+        - ARCH=aarch64  VERSION=v3.12   QEMU_ARCH=aarch64   TAG_ARCH=arm64
+        - ARCH=armv7    VERSION=v3.12   QEMU_ARCH=arm       TAG_ARCH=armv7
+        - ARCH=ppc64le  VERSION=v3.12   QEMU_ARCH=ppc64le   TAG_ARCH=ppc64le
 
         - ARCH=x86      VERSION=edge    QEMU_ARCH=i386      TAG_ARCH=x86
         - ARCH=x86_64   VERSION=edge    QEMU_ARCH=x86_64    TAG_ARCH=x86_64
