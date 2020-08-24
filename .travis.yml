@@ -2,14 +2,14 @@ dist: xenial
 services: docker
 language: bash
 addons:
-  apt:
-    sources:
-        - sourceline: 'deb http://archive.ubuntu.com/ubuntu bionic main universe'
-    packages:
-      - qemu-user-static
+    apt:
+        sources:
+            - sourceline: "deb http://archive.ubuntu.com/ubuntu bionic main universe"
+        packages:
+            - qemu-user-static
 env:
     global:
-        - QEMU_VER=v5.0.0-2
+        - QEMU_VER=v5.1.0-2
         - DOCKER_REPO=multiarch/alpine
         - LATEST_VERSION=v3.12
     matrix:
@@ -37,10 +37,10 @@ env:
         - ARCH=x86_64   VERSION=v3.11   QEMU_ARCH=x86_64    TAG_ARCH=x86_64
         - ARCH=x86      VERSION=v3.11   QEMU_ARCH=i386      TAG_ARCH=i386
         - ARCH=x86_64   VERSION=v3.11   QEMU_ARCH=x86_64    TAG_ARCH=amd64
-        # - ARCH=armhf    VERSION=v3.11   QEMU_ARCH=arm       TAG_ARCH=armhf
+        - ARCH=armhf    VERSION=v3.11   QEMU_ARCH=arm       TAG_ARCH=armhf
         - ARCH=aarch64  VERSION=v3.11   QEMU_ARCH=aarch64   TAG_ARCH=aarch64
         - ARCH=aarch64  VERSION=v3.11   QEMU_ARCH=aarch64   TAG_ARCH=arm64
-        # - ARCH=armv7    VERSION=v3.11   QEMU_ARCH=arm       TAG_ARCH=armv7
+        - ARCH=armv7    VERSION=v3.11   QEMU_ARCH=arm       TAG_ARCH=armv7
         - ARCH=ppc64le  VERSION=v3.11   QEMU_ARCH=ppc64le   TAG_ARCH=ppc64le
 
         - ARCH=x86      VERSION=v3.12   QEMU_ARCH=i386      TAG_ARCH=x86
@@ -66,7 +66,7 @@ script:
     - sudo ./update.sh -a "$ARCH" -v "$VERSION" -q "$QEMU_ARCH" -u "$QEMU_VER" -d "$DOCKER_REPO" -t "$TAG_ARCH" -l "$LATEST_VERSION"
 after_success:
     - |
-      if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
-          docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && \
-              docker push $DOCKER_REPO
-      fi
+        if [[ $TRAVIS_BRANCH == 'master' && $TRAVIS_PULL_REQUEST == 'false' ]]; then
+            docker login -u="$DOCKER_USERNAME" -p="$DOCKER_PASSWORD" && \
+                docker push $DOCKER_REPO
+        fi
