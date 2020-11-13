@@ -1,0 +1,37 @@
+name: actions
+on:
+  push:
+  schedule:
+    - cron: '0 0 * * 0'
+jobs:
+  alpine:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        QEMU_VER: [v5.1.0-5]
+        DOCKER_REPO: [multiarch/alpine]
+        LATEST_VERSION: [v3.12]
+        VERSION: [v3.10, v3.11, v3.12, edge]
+        TAG_ARCH: [x86, x86_64, i386, amd64, armhf, aarch64, arm64, armv7, ppc64le]
+        include:
+          - {ARCH: x86,      QEMU_ARCH: i386,      TAG_ARCH: x86}
+          - {ARCH: x86_64,   QEMU_ARCH: x86_64,    TAG_ARCH: x86_64}
+          - {ARCH: x86,      QEMU_ARCH: i386,      TAG_ARCH: i386}
+          - {ARCH: x86_64,   QEMU_ARCH: x86_64,    TAG_ARCH: amd64}
+          - {ARCH: armhf,    QEMU_ARCH: arm,       TAG_ARCH: armhf}
+          - {ARCH: aarch64,  QEMU_ARCH: aarch64,   TAG_ARCH: aarch64}
+          - {ARCH: aarch64,  QEMU_ARCH: aarch64,   TAG_ARCH: arm64}
+          - {ARCH: armv7,    QEMU_ARCH: arm,       TAG_ARCH: armv7}
+          - {ARCH: ppc64le,  QEMU_ARCH: ppc64le,   TAG_ARCH: ppc64le}
+    steps:
+      - uses: actions/checkout@v2
+      - name: Build
+        run: |
+          sudo apt install qemu-user-static
+          echo "sudo ./update.sh -a ${{ matrix.ARCH }} -v ${{ matrix.VERSION }} -q ${{ matrix.QEMU_ARCH }} -u ${{ matrix.QEMU_VER }} -d ${{ matrix.DOCKER_REPO }} -t ${{ matrix.TAG_ARCH }} -l ${{ matrix.LATEST_VERSION }}"
+          sudo ./update.sh -a ${{ matrix.ARCH }} -v ${{ matrix.VERSION }} -q ${{ matrix.QEMU_ARCH }} -u ${{ matrix.QEMU_VER }} -d ${{ matrix.DOCKER_REPO }} -t ${{ matrix.TAG_ARCH }} -l ${{ matrix.LATEST_VERSION }}
+      - name: Publish
+        if: github.ref == 'refs/heads/master'
+        run: |
+          docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
+          docker push {{ matrix.DOCKER_REPO }}
