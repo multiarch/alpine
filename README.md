@@ -1,4 +1,4 @@
-# :earth_africa: alpine [![Build Status](https://travis-ci.org/multiarch/alpine.svg?branch=master)](https://travis-ci.org/multiarch/alpine)
+# :earth_africa: alpine ![actions](https://github.com/multiarch/alpine/workflows/actions/badge.svg)
 
 ![](https://raw.githubusercontent.com/multiarch/dockerfile/master/logo.jpg)
 
