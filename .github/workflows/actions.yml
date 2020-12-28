@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        QEMU_VER: [v5.1.0-7]
+        QEMU_VER: [v5.2.0-1]
         DOCKER_REPO: [multiarch/alpine]
         LATEST_VERSION: [v3.12]
         VERSION: [v3.10, v3.11, v3.12, edge]
