@@ -10,8 +10,8 @@ jobs:
       matrix:
         QEMU_VER: [v5.2.0-2]
         DOCKER_REPO: [multiarch/alpine]
-        LATEST_VERSION: [v3.12]
-        VERSION: [v3.10, v3.11, v3.12, edge]
+        LATEST_VERSION: [v3.13]
+        VERSION: [v3.10, v3.11, v3.12, v3.13, edge]
         TAG_ARCH: [x86, x86_64, i386, amd64, armhf, aarch64, arm64, armv7, ppc64le]
         include:
           - {ARCH: x86,      QEMU_ARCH: i386,      TAG_ARCH: x86}
