@@ -8,8 +8,8 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        QEMU_VER: [v5.2.0-2]
-        DOCKER_REPO: [multiarch/alpine]
+        QEMU_VER: [v5.2.0-11]
+        DOCKER_REPO: [docker.io/multiarch/alpine]
         LATEST_VERSION: [v3.14]
         VERSION: [v3.11, v3.12, v3.13, v3.14, edge]
         TAG_ARCH: [x86, x86_64, i386, amd64, armhf, aarch64, arm64, armv7, ppc64le]
@@ -27,11 +27,10 @@ jobs:
       - uses: actions/checkout@v2
       - name: Build
         run: |
-          sudo apt update && sudo apt install qemu-user-static
-          echo "sudo ./update.sh -a ${{ matrix.ARCH }} -v ${{ matrix.VERSION }} -q ${{ matrix.QEMU_ARCH }} -u ${{ matrix.QEMU_VER }} -d ${{ matrix.DOCKER_REPO }} -t ${{ matrix.TAG_ARCH }} -l ${{ matrix.LATEST_VERSION }}"
+          sudo apt-get update && sudo apt-get install -y --no-install-recommends qemu-user-static
           sudo ./update.sh -a ${{ matrix.ARCH }} -v ${{ matrix.VERSION }} -q ${{ matrix.QEMU_ARCH }} -u ${{ matrix.QEMU_VER }} -d ${{ matrix.DOCKER_REPO }} -t ${{ matrix.TAG_ARCH }} -l ${{ matrix.LATEST_VERSION }}
       - name: Publish
         if: github.ref == 'refs/heads/master'
         run: |
           docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_TOKEN }}
-          docker push ${{ matrix.DOCKER_REPO }}
+          docker push -a ${{ matrix.DOCKER_REPO }}
