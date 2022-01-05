@@ -23,6 +23,7 @@ jobs:
           - {ARCH: aarch64,  QEMU_ARCH: aarch64,   TAG_ARCH: arm64}
           - {ARCH: armv7,    QEMU_ARCH: arm,       TAG_ARCH: armv7}
           - {ARCH: ppc64le,  QEMU_ARCH: ppc64le,   TAG_ARCH: ppc64le}
+          - {ARCH: s390x,  QEMU_ARCH: s390x,   TAG_ARCH: s390x}
     steps:
       - uses: actions/checkout@v2
       - name: Build
