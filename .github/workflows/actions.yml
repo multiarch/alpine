@@ -12,7 +12,7 @@ jobs:
         DOCKER_REPO: [docker.io/multiarch/alpine]
         LATEST_VERSION: [v3.14]
         VERSION: [v3.11, v3.12, v3.13, v3.14, edge]
-        TAG_ARCH: [x86, x86_64, i386, amd64, armhf, aarch64, arm64, armv7, ppc64le]
+        TAG_ARCH: [x86, x86_64, i386, amd64, armhf, aarch64, arm64, armv7, ppc64le, riscv64]
         include:
           - {ARCH: x86,      QEMU_ARCH: i386,      TAG_ARCH: x86}
           - {ARCH: x86_64,   QEMU_ARCH: x86_64,    TAG_ARCH: x86_64}
@@ -23,6 +23,7 @@ jobs:
           - {ARCH: aarch64,  QEMU_ARCH: aarch64,   TAG_ARCH: arm64}
           - {ARCH: armv7,    QEMU_ARCH: arm,       TAG_ARCH: armv7}
           - {ARCH: ppc64le,  QEMU_ARCH: ppc64le,   TAG_ARCH: ppc64le}
+          - {ARCH: riscv64,  QEMU_ARCH: riscv64,   TAG_ARCH: riscv64}
     steps:
       - uses: actions/checkout@v2
       - name: Build
