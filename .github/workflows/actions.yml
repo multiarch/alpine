@@ -10,8 +10,8 @@ jobs:
       matrix:
         QEMU_VER: [v6.1.0-1]
         DOCKER_REPO: [docker.io/multiarch/alpine]
-        LATEST_VERSION: [v3.14]
-        VERSION: [v3.11, v3.12, v3.13, v3.14, edge]
+        LATEST_VERSION: [v3.17]
+        VERSION: [v3.11, v3.12, v3.13, v3.14, v3.15, v3.16, v3.17, edge]
         TAG_ARCH: [x86, x86_64, i386, amd64, armhf, aarch64, arm64, armv7, ppc64le, s390x]
         include:
           - {ARCH: x86,      QEMU_ARCH: i386,      TAG_ARCH: x86}
